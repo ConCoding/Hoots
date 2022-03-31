@@ -1,0 +1,5 @@
+#!/bin/bash
+
+export $(echo $(cat .env | sed 's/#.*//g' | sed 's/\r//g' | xargs))
+
+k6 run -e USER="$REMOTE_USER" -e PATH="." "$1"

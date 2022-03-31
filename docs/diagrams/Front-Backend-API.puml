@@ -1,0 +1,91 @@
+@startuml
+'https://plantuml.com/component-diagram
+/'TODO: Beautify (Probably never)'/
+
+package Frontend {
+    [f.Login]
+    [f.Registration]
+    [f.Timeline Mine]
+    [f.Timeline Global]
+    [f.Timeline Search]
+    [f.Any Profile Page]
+    [f.My Profile Page]
+    [f.Follower]
+    [f.Following]
+    [f.Settings]
+}
+
+frame Backend {
+    package Requests {
+        [POST /login]
+        [GET /hoot/search]
+        [GET /hoot/timeline/global]
+        [GET /hoot/timeline/mine]
+        [GET /user]
+        [POST /user]
+        [POST /register]
+        [POST /hoots/post]
+        [POST /hoots/image]
+        [POST /hoots/comment]
+
+        note right of [GET /hoot/timeline/mine]
+            Only available for current User
+            Identification via Session Authentication
+        end note
+    }
+
+    database "MySql" {
+        [b.Hoot]
+        [b.Reaction]
+        [b.User]
+        [b.Follower]
+        [b.History]
+    }
+}
+
+
+'[b.Hoot] -[hidden]right-> [b.Reaction]
+'[b.Reaction] -[hidden]right-> [b.User]
+'[b.User] -[hidden]right-> [b.Follower]
+'[b.Follower] -[hidden]right-> [b.History]
+
+[f.Timeline Global] ------> [GET /hoot/timeline/global]
+[f.Timeline Mine] ------> [GET /hoot/timeline/mine]
+[f.Timeline Global] ------> [POST /hoots/post]
+[f.Timeline Mine] ------> [POST /hoots/post]
+[f.My Profile Page] ------> [POST /hoots/post]
+[f.Timeline Global] ------> [POST /hoots/image]
+[f.Timeline Mine] ------> [POST /hoots/image]
+[f.My Profile Page] ------> [POST /hoots/image]
+[f.Timeline Global] ------> [POST /hoots/comment]
+[f.Timeline Mine] ------> [POST /hoots/comment]
+[f.My Profile Page] ------> [POST /hoots/comment]
+[f.Timeline Search] ------> [GET /hoot/search]
+[f.Any Profile Page] ------> [GET /hoot/search]
+[f.My Profile Page] ------> [GET /user]
+[f.Login] ------> [POST /login]
+[f.Registration] ------> [POST /register]
+[f.Follower] ------> [GET /user]
+[f.Following] ------> [GET /user]
+[f.Settings] ------> [POST /user]
+
+[POST /login] -------> [b.User]
+[POST /register] -------> [b.User]
+[GET /user] -------> [b.User]
+[GET /user] -------> [b.Follower]
+[POST /user] -------> [b.User]
+[POST /user] -------> [b.Follower]
+[GET /hoot/search] -------> [b.Hoot]
+[GET /hoot/search] -------> [b.User]
+[GET /hoot/search] -------> [b.Reaction]
+[GET /hoot/timeline/mine] -------> [b.Hoot]
+[GET /hoot/timeline/mine] -------> [b.User]
+[GET /hoot/timeline/mine] -------> [b.Reaction]
+[GET /hoot/timeline/global] -------> [b.Hoot]
+[GET /hoot/timeline/global] -------> [b.User]
+[GET /hoot/timeline/global] -------> [b.Reaction]
+[POST /hoots/post] -------> [b.Hoot]
+[POST /hoots/image] -------> [b.Hoot]
+[POST /hoots/comment] -------> [b.Hoot]
+
+@enduml

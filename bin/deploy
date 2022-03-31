@@ -1,0 +1,12 @@
+#!/bin/bash
+
+export $(echo $(cat .env | sed 's/#.*//g' | sed 's/\r//g' | xargs) | envsubst)
+
+bin/uploadFiles
+
+ssh "$REMOTE_USER"@"$REMOTE_HOST" "cd $REMOTE_PATH && bin/remote/buildAndUpdate"
+
+if [[ "$1" == "log" ]]
+then
+  ssh "$REMOTE_USER"@"$REMOTE_HOST" "tail -f -n1 /var/log/tomcat9/localhost.*.log"
+fi

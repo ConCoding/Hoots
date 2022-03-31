@@ -1,0 +1,42 @@
+#!/bin/bash
+name="$USER-java"
+manager="$USER-manager"
+
+export $(echo $(cat .env | sed 's/#.*//g' | sed 's/\r//g' | xargs))
+
+# tomcat available?
+if ! curl -f -s -o /dev/null https://informatik.hs-bremerhaven.de/$manager/ ; then
+   echo "Ihr tomcat ist nicht aktiviert. Aktivieren Sie auf hopper mit"
+   echo "  hbv_dockertomcatstarten"
+   echo "zuerst Ihren tomcat."
+   exit 1
+fi
+
+# TODO: Prevent deleting, this is a workaround
+# TODO: When moving classes the old ones are not getting deleted
+rm -rf build
+
+echo "Compile"
+mkdir -p build media
+cp -r app/* build
+sed -i "s/__MARIA_HOST__/$MARIADB_HOST/g" build/META-INF/context.xml
+sed -i "s/__MARIA_USER__/$MARIADB_USER/g" build/META-INF/context.xml
+sed -i "s/__MARIA_PWD__/$MARIADB_PWD/g" build/META-INF/context.xml
+sed -i "s/__MARIA_DATABASE__/$MARIADB_DATABASE/g" build/META-INF/context.xml
+sed -i "s/REDIS_PWD/$REDIS_PWD/g" build/WEB-INF/web.xml
+export CLASSPATH=.:$(find complibs app/WEB-INF/lib -name '*jar'|tr '\n' ':')
+javafiles=$(find src -name '*java')
+javac -d build/WEB-INF/classes $javafiles
+
+echo build the war-file
+jar -cf $name.war -C build .
+
+ls $name.war
+
+echo "deploy as $name"
+sudo -u tomcat rm /var/lib/tomcat9/webapps/${name}/media
+curl -s -n -T $name.war "https://informatik.hs-bremerhaven.de/$manager/text/deploy?path=/$name&update=true"
+#curl -s https://informatik.hs-bremerhaven.de/$name/hello|html2text
+
+sudo -u tomcat ln -s $REMOTE_PATH/media /var/lib/tomcat9/webapps/${name}/media
+chmod go+w $REMOTE_PATH/media

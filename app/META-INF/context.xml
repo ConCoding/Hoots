@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Resource name="jdbc/mariadb"
+              auth="Container"
+              type="javax.sql.DataSource"
+              initialSize="10"
+              maxWaitMillis="5000"
+              minIdle="10"
+              maxIdle="-1"
+              maxTotal="200"
+              removeAbandoned="true"
+              logAbandoned="true"
+              username="__MARIA_USER__"
+              password="__MARIA_PWD__"
+              driverClassName="org.mariadb.jdbc.Driver"
+              testOnBorrow="true"
+              testWhileIdle="true"
+              validationQuery="SELECT 1;"
+              url="jdbc:mariadb://__MARIA_HOST__:3306/__MARIA_DATABASE__" />
+    <Resources allowLinking="true" />
+</Context>
