@@ -13,10 +13,11 @@ This project should be run in the intended location: a docker container in the H
 If for whatever reason you want to modify this project and run it yourself as is, make sure that your docker container (or server) has the following software installed:
 
  - any common linux OS with bash
- - Java 11+
+ - JDK 11+
  - Tomcat 9+
  - MariaDB 10.2.1+ (CHECK Constraints need to be enforced)
  - gnuplot
+ - Redis
  - if you want to run load tests: Grafana k6
 
 ### Development Process
