@@ -15,29 +15,26 @@ If for whatever reason you want to modify this project and run it yourself as is
  - any common linux OS with bash
  - JDK 11+
  - Tomcat 9+
- - MariaDB 10.2.1+ (CHECK Constraints need to be enforced)
+ - MariaDB 10.2.1+ (CHECK constraints need to be enforced)
  - gnuplot
  - Redis
  - if you want to run load tests: Grafana k6
 
 ### Development Process
 
-Each team member developed in his/her own docker container hosted in the HS Bremerhaven infrastructure.
-This prevented issues between different development tasks.
+Each team member developed on his/her local machine and deployed the application to his/her own docker container hosted in the HS Bremerhaven infrastructure.
 
-The development process was defined as follows:
+If you want to set this project up yourself, you need to do the following:
 
 - create an empty project directory in your docker container
 - clone the repository on your local machine
-- make a copy of `.env.sample` and rename it to `.env`. Enter your individual information and the remote project dir
+- make a copy of `.env.sample` and rename it to `.env`. Enter your individual information and the previously created remote project directory.
 - only once you need to set up the remote database by running `bin/setupDbInDocker`
 - run `bin/deploy` (this will sync your local files with the remote project dir and redeploy the tomcat container)
 
 ## Documentation
 
 ### Scripts (local)
-
-These scripts are for the local development.
 
 Location: `bin/`
 
